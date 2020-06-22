@@ -1,0 +1,7 @@
+<ng-template [ngIf]="!gameEnded">
+  <p>{{timeDifference.getUTCHours()}}:{{timeDifference.getMinutes()}}:{{timeDifference.getSeconds()}}:{{timeDifference.getMilliseconds()}}</p>
+</ng-template>
+<ng-template [ngIf]="gameEnded">
+  <p>Game over!</p>
+</ng-template>
+<button (click)="startTimer(5000)">start</button>
