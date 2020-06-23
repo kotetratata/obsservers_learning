@@ -1,46 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {fromEvent, interval, Observable} from "rxjs";
 import {debounceTime, map, tap} from "rxjs/operators";
-import {Scheduler} from "rxjs/internal/Rx";
 
 @Component({
   selector: 'app-first',
   templateUrl: './first.component.html',
   styleUrls: ['./first.component.scss']
 })
-export class FirstComponent implements OnInit {
+export class FirstComponent{
   timeDifference;
   stream;
   gameEnded = false;
   constructor() { }
 
   startTimer(gameTime) {
+    this.gameEnded = false;
     const expireDate = new Date(
       Date.now() + gameTime
     );
-    console.log(expireDate);
-    console.log(expireDate.getTime());
-    console.log(Date.now());
-
-    this.stream = interval(400)
+    this.stream = interval(4)
       .pipe(
-        map(() => new Date(  expireDate.getTime() - Date.now())),
-        tap((value => console.log(value)))
+        map(() => expireDate.getTime() - Date.now())
       )
       .subscribe(
       (value) => {
-        if(value.getTime() < 0 ) {
+        if(value < 0 ) {
           this.gameEnded = true;
           this.stream.unsubscribe();
         }
         else {
-          this.timeDifference = value;
+          this.timeDifference = new Date(value);
         }
       }
     )
   }
-
-  ngOnInit(): void {
-  }
-
 }
