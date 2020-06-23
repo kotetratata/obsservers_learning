@@ -32,17 +32,32 @@ export class SecondComponent implements OnInit {
   }
 
   Debounce( delayTime ) :any {
-    let lastEmit = Date.now();
-    let lastEmitValue = null;
+    let timer = null;
+    let currentValue = null;
 
-    return function(source) {
-      if(Date.now() - lastEmit > delayTime) {
-        lastEmit = Date.now();
-        lastEmitValue = source;
-        return source
-      } else {
-        lastEmit = Date.now();
-        lastEmitValue = source;
+    const reset = function () {
+      timer = null;
+      currentValue = null;
+    };
+
+    const emitValue = function () {
+      let nextValue = typeof currentValue === 'object'?
+        {...currentValue}:
+        currentValue;
+      reset();
+      return nextValue;
+    };
+
+    return function(value) {
+      if(timer) {
+        clearTimeout(timer);
+        timer = null;
+        currentValue = value;
+        timer = setTimeout(emitValue, delayTime);
+      }
+      else {
+        currentValue = value;
+        timer = setTimeout(emitValue, delayTime);
       }
     }
   }
